@@ -125,6 +125,13 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+// tourSchema.index({ price: 1 });
+// Create an index on the 'price' and 'averageRatings' fields of the 'tourSchema' schema
+tourSchema.index({ price: 1, averageRatings: -1 });
+
+// This line of code creates an index on the "slug" field in ascending order in the "tourSchema" collection.
+tourSchema.index({ slug: 1 });
+
 // The reviews virtual populates the reviews field of the tour document with reviews from the Review model
 tourSchema.virtual("reviews", {
   ref: "Review",

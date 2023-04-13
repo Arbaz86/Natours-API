@@ -110,6 +110,10 @@ exports.getAll = (Model) =>
       .limitFields()
       .paginate();
 
+    // Executes the query and returns statistics regarding its performance
+    // const docs = await features.query.explain();
+
+    // Executes the query without returning statistics regarding its performance
     const docs = await features.query;
 
     res
