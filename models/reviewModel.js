@@ -52,35 +52,54 @@ reviewSchema.pre(/^find/, function (next) {
   next();
 });
 
-// calcAverageRatings function to calculate the average rating for a tour based on its reviews
+// A static method on the Review schema to calculate and update the average rating for a tour
 reviewSchema.statics.calcAverageRatings = async function (tourId) {
-  // use the aggregate function to perform a match on the tourId and group the results by tour
+  // Use the aggregate function to perform a match on the tourId and group the results by tour
   const stats = await this.aggregate([
     {
       $match: { tour: tourId },
     },
     {
       $group: {
-        _id: "$tour", // group by tour
-        nRating: { $sum: 1 }, // count the number of ratings
-        aveRating: { $avg: "$rating" }, // calculate the average rating
+        _id: "$tour", // Group by tour ID
+        nRating: { $sum: 1 }, // Count the number of ratings
+        aveRating: { $avg: "$rating" }, // Calculate the average rating
       },
     },
   ]);
 
-  await Tour.findByIdAndUpdate(tourId, {
-    ratingQuantity: stats[0].nRating,
-    ratingsAverage: stats[0].aveRating,
-  });
-
-  console.log(stats); // log the statistics to the console
+  if (stats.length > 0) {
+    // If there are ratings for the tour, update the tour's rating statistics in the database
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingQuantity: stats[0].nRating,
+      ratingsAverage: stats[0].aveRating,
+    });
+  } else {
+    // If there are no ratings for the tour, set the tour's rating statistics to default values
+    await Tour.findByIdAndUpdate(tourId, {
+      ratingQuantity: 0,
+      ratingsAverage: 4.5,
+    });
+  }
 };
-
 // Add a post-save hook to the Review schema
 reviewSchema.post("save", function () {
   // Whenever a Review document is saved, call the calcAverageRatings function on the constructor of the Review model
   // Pass in the tour ID associated with this Review document to calcAverageRatings
   this.constructor.calcAverageRatings(this.tour);
+});
+
+// A pre middleware function on the Review schema that saves the current review document to `this.r`
+// before executing the query, so that we can access it in the post middleware
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.r = await this.findOne();
+  next();
+});
+
+// A post middleware function on the Review schema that updates the tour's rating statistics
+// after a findOneAndX query (e.g. findOneAndUpdate, findOneAndDelete) has been executed
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
 // Creating a model for the review schema

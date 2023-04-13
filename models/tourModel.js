@@ -36,6 +36,7 @@ const tourSchema = new mongoose.Schema(
       default: 4.5, // The default rating is 4.5
       min: [1, "Rating must be above 1.0"], // The minimum rating is 1.0
       max: [5, "Rating must be below 5.0"], // The maximum rating is 5.0
+      set: (val) => Math.round(val * 10) / 10, // Run Each time ratingsAverage Val Changed 4.66666, 46.6666, 47, 4.7
     },
     ratingsQuantity: {
       type: Number,
@@ -151,4 +152,5 @@ tourSchema.pre(/^find/, function (next) {
 
 // The Tour model is created using the tourSchema and exported
 const Tour = mongoose.model("Tour", tourSchema);
+
 module.exports = Tour;
