@@ -1,5 +1,6 @@
 // Importing mongoose package
 const mongoose = require("mongoose");
+const Tour = require("./tourModel");
 
 // Creating a new schema for reviews
 const reviewSchema = new mongoose.Schema(
@@ -49,6 +50,37 @@ reviewSchema.pre(/^find/, function (next) {
   });
 
   next();
+});
+
+// calcAverageRatings function to calculate the average rating for a tour based on its reviews
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  // use the aggregate function to perform a match on the tourId and group the results by tour
+  const stats = await this.aggregate([
+    {
+      $match: { tour: tourId },
+    },
+    {
+      $group: {
+        _id: "$tour", // group by tour
+        nRating: { $sum: 1 }, // count the number of ratings
+        aveRating: { $avg: "$rating" }, // calculate the average rating
+      },
+    },
+  ]);
+
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingQuantity: stats[0].nRating,
+    ratingsAverage: stats[0].aveRating,
+  });
+
+  console.log(stats); // log the statistics to the console
+};
+
+// Add a post-save hook to the Review schema
+reviewSchema.post("save", function () {
+  // Whenever a Review document is saved, call the calcAverageRatings function on the constructor of the Review model
+  // Pass in the tour ID associated with this Review document to calcAverageRatings
+  this.constructor.calcAverageRatings(this.tour);
 });
 
 // Creating a model for the review schema
