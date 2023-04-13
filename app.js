@@ -1,0 +1,74 @@
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+var xss = require("xss-clean");
+const mongoSanitize = require("express-mongo-sanitize");
+var hpp = require("hpp");
+
+const AppError = require("./utils/appError");
+const globalErrorHandler = require("./controllers/errorController");
+const tourRouter = require("./routes/tourRoutes");
+const userRouter = require("./routes/userRoutes");
+const reviewRouter = require("./routes/reviewRoutes");
+
+const app = express();
+
+// Set Security HTTP headers
+app.use(helmet());
+
+// Parse JSON request body and limit its size to 10KB
+app.use(express.json({ limit: "10kb" }));
+
+// Limit requests from the same API to prevent abuse
+const apiLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 100, // 100 requests per window (per IP)
+  message: "Too many requests from this IP, please try again in an hour",
+});
+app.use("/api", apiLimiter); // apply the rate limiter to API routes only
+
+// Sanitize request data to prevent NoSQL injection attacks
+app.use(mongoSanitize());
+
+// Sanitize request data to prevent cross-site scripting (XSS) attacks
+app.use(xss());
+
+// Prevent parameter pollution by whitelisting certain query parameters
+app.use(
+  hpp({
+    whitelist: [
+      "duration",
+      "ratingsAverage",
+      "ratingsQuantity",
+      "maxGroupSize",
+      "difficulty",
+      "price",
+    ],
+  })
+);
+
+// Log HTTP requests in the console in the "dev" format
+app.use(morgan("dev"));
+
+// Enable Cross-Origin Resource Sharing (CORS) for all routes
+app.use(cors());
+
+// API routes
+app.use("/api/v1/tours", tourRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/reviews", reviewRouter);
+
+// Handle requests that do not match any of the defined routes
+app.all("*", (req, res, next) => {
+  return next(
+    new AppError(`Can't find ${req.originalUrl} on this server.`, 404)
+  );
+});
+
+// Global error handler
+app.use(globalErrorHandler);
+
+module.exports = app;
