@@ -133,6 +133,7 @@ tourSchema.index({ price: 1, averageRatings: -1 });
 // This line of code creates an index on the "slug" field in ascending order in the "tourSchema" collection.
 tourSchema.index({ slug: 1 });
 
+// Creating a 2dsphere index for the startLocation field of the Tour model for geospatial queries.
 tourSchema.index({ startLocation: "2dsphere" });
 
 // The reviews virtual populates the reviews field of the tour document with reviews from the Review model

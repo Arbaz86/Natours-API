@@ -11,10 +11,12 @@ router.use("/:tourId/reviews", reviewRouter);
 // GET /tour/sdf5sdf5jkj61sfs/reviews
 // GET /tour/sdf5sdf5jkj61sfs/reviews/989dfs15
 
+// Route for fetching tours within a specified radius from a given point
 router
   .route("/tours-within/:distance/center/:latlng/unit/:unit")
   .get(tourController.getToursWithin);
 
+// Route for fetching the distances of tours from a given point
 router.route("/distances/:latlng/unit/:unit").get(tourController.getDistances);
 
 // Tours
