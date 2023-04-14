@@ -11,6 +11,12 @@ router.use("/:tourId/reviews", reviewRouter);
 // GET /tour/sdf5sdf5jkj61sfs/reviews
 // GET /tour/sdf5sdf5jkj61sfs/reviews/989dfs15
 
+router
+  .route("/tours-within/:distance/center/:latlng/unit/:unit")
+  .get(tourController.getToursWithin);
+
+router.route("/distances/:latlng/unit/:unit").get(tourController.getDistances);
+
 // Tours
 router
   .route("/top-5-cheap")
