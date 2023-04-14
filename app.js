@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -15,6 +16,15 @@ const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
 
 const app = express();
+
+// Set the view engine to Pug
+app.set("view engine", "pug");
+
+// Set the path of views directory
+app.set("views", path.join(__dirname, "views"));
+
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, "public")));
 
 // Set Security HTTP headers
 app.use(helmet());
@@ -55,6 +65,13 @@ app.use(morgan("dev"));
 
 // Enable Cross-Origin Resource Sharing (CORS) for all routes
 app.use(cors());
+
+app.get("/", (req, res) => {
+  res.status(200).render("base", {
+    tour: "1",
+    user: "Arbaz",
+  });
+});
 
 // API routes
 app.use("/api/v1/tours", tourRouter);
