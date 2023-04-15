@@ -2,19 +2,20 @@ const Tour = require("../models/tourModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
+// Exporting function that gets all tour data and renders overview page
 exports.getOverview = catchAsync(async (req, res, next) => {
-  // 1) Get tour data from collection
+  // 1) Getting tour data from tourModel collection
   const tours = await Tour.find();
 
-  // 2) Build Template
-  // 3) Render that template using tour data from 1)
-
+  // 2) Building a template for the overview page
+  // 3) Rendering that template using the tour data from step 1
   res.status(200).render("overview", {
     title: "All Tours",
     tours,
   });
 });
 
+// Exporting function that renders tour details page
 exports.getTour = catchAsync(async (req, res) => {
   res.status(200).render("tour", {
     title: "The Forest Hiker Tour",
