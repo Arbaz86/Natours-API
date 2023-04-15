@@ -1,6 +1,7 @@
 // Importing required modules
 const mongoose = require("mongoose");
 const validator = require("validator");
+const slugify = require("slugify");
 
 // Creating a new Mongoose schema for tours
 const tourSchema = new mongoose.Schema(
@@ -15,6 +16,8 @@ const tourSchema = new mongoose.Schema(
       minlength: [10, "A tour name must have more or equal then 10 characters"], // The name must have at least 10 characters
       // validate: [validator.isAlpha, "Tour name must only contain characters"], // A validator to check if the name only contains letters
     },
+    // Define a slug field that will store a URL-friendly version of the tour name
+    slug: String,
     duration: {
       type: Number,
       required: [true, "A tour must have a duration"], // The duration is required
@@ -135,6 +138,12 @@ tourSchema.index({ slug: 1 });
 
 // Creating a 2dsphere index for the startLocation field of the Tour model for geospatial queries.
 tourSchema.index({ startLocation: "2dsphere" });
+
+// Middleware function that automatically generates a slug field based on the tour name before saving a new document
+tourSchema.pre("save", function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 
 // The reviews virtual populates the reviews field of the tour document with reviews from the Review model
 tourSchema.virtual("reviews", {
