@@ -22,11 +22,13 @@ exports.getTour = catchAsync(async (req, res) => {
   const tour = await Tour.findOne({ slug })
     .populate({
       path: "reviews",
-      fields: "review, rating user",
+      select: "review rating user createdAt",
     })
     .populate({
       path: "guides",
     });
+
+  console.log(tour);
 
   res.status(200).render("tour", {
     title: "The Forest Hiker Tour",
