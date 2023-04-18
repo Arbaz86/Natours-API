@@ -1,17 +1,10 @@
 //- Extends the base layout template
 extends base
 
-mixin reviewCard(review)
-  .reviews__card
-    .reviews__avatar
-      img.reviews__avatar-img(src=`/img/users/${review.user.photo}`, alt=`${review.user.name}`)
-      h6.reviews__user= review.user.name
-    p.reviews__text= review.review
-    .reviews__rating
-      each star in [1, 2, 3, 4, 5]
-        svg.reviews__star(class=`.reviews__star--${review.rating >= star ? 'active' : 'inactive'}`)
-          use(xlink:href='/img/icons.svg#icon-star')
+include _reviewCard
 
+block append head
+  script(src="/js/mapbox.js" defer) 
 
 mixin overviewBox(label, text, icon)
   //- Create a div to hold the label, text, and icon
@@ -89,7 +82,7 @@ block content
 
 
   section.section-map
-    #map
+    #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
   section.section-reviews
     .reviews
@@ -101,11 +94,11 @@ block content
     .cta
       .cta__img.cta__img--logo
         img(src='/img/logo-white.png', alt='Natours logo')
-      img.cta__img.cta__img--1(src='/img/tour-5-2.jpg', alt='')
-      img.cta__img.cta__img--2(src='/img/tour-5-1.jpg', alt='')
+      img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='Tour Picture')
+      img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='Tour Picture')
       .cta__content
         h2.heading-secondary What are you waiting for?
-        p.cta__text 10 days. 1 adventure. Infinite memories. Make it yours today!
+        p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
 
         if user
           button.btn.btn--green.span-all-rows Book tour now!
