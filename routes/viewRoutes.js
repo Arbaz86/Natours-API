@@ -1,11 +1,14 @@
 // Require the express module
 const express = require("express");
+const authController = require("../controllers/authController");
 
 // Require the view controller module
 const viewController = require("../controllers/viewController");
 
 // Create an instance of the express router
 const router = express.Router();
+
+router.use(authController.isLoggedIn);
 
 // Define the routes using the router object
 // When a GET request is made to the root path ("/"), call the getOverview function from the viewController module

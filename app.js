@@ -70,10 +70,11 @@ app.use(morgan("dev"));
 // Enable Cross-Origin Resource Sharing (CORS) for all routes
 app.use(cors());
 
-app.use((req, res, next) => {
-  console.log(req.cookies);
-  next();
-});
+// practice middleware
+// app.use((req, res, next) => {
+//   console.log(req.cookies);
+//   next();
+// });
 
 // API routes
 app.use("/", viewRouter);

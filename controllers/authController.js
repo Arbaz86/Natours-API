@@ -5,6 +5,7 @@ const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/sendEmail");
+const { promisify } = require("util");
 
 // Function to create JWT token
 const signToken = (id) => {
@@ -77,13 +78,22 @@ exports.login = async (req, res, next) => {
 // Function to protect a route with JWT authentication
 exports.protect = catchAsync(async (req, res, next) => {
   // Get the JWT token from the request headers and check if it exists
-  const token = req.headers?.authorization?.split(" ")[1];
+  let token;
+
+  // If the Authorization header starts with "Bearer", assume the token is a JWT and extract it from the header
+  if (req.headers?.authorization?.startsWith("Bearer")) {
+    token = req.headers?.authorization?.split(" ")[1];
+  }
+  // Otherwise, check for a cookie named "jwt" and use its value as the token
+  else if (req.cookie.jwt) {
+    token = req.cookie.jwt;
+  }
+
+  // If no JWT token was found, return an error indicating that the user is not logged in
   if (!token) {
     return next(
       new AppError("You are not logged in! Please log in to get access.", 401)
     );
-  } else if (req.cookie.jwt) {
-    token = req.cookie.jwt;
   }
 
   // Verify the JWT token
@@ -109,9 +119,51 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
-
+  res.locals.user = currentUser;
   next();
 });
+
+// Only for rendered pages, no errors!
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // 1) verify token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+      console.log(decoded);
+
+      // 2) Check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        return next();
+      }
+
+      // console.log(currentUser);
+
+      // 3) Check if user changed password after the token was issued
+      // if (currentUser.changedPasswordAfter(decoded.iat)) {
+      //   return next();
+      // }
+
+      console.log(currentUser);
+
+      // THERE IS A LOGGED IN USER
+      res.locals.user = currentUser;
+      console.log("Hello");
+
+      return next();
+    } catch (err) {
+      console.log(err);
+      return next();
+    }
+  }
+  console.log("Hello3");
+
+  next();
+};
+
 // This function restricts access to certain routes based on user roles
 exports.restrictTo = (...roles) => {
   // Returns a middleware function that checks if the user's role is included in the allowed roles
