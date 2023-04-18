@@ -16,7 +16,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 });
 
 // Exporting function that renders tour details page
-exports.getTour = catchAsync(async (req, res) => {
+exports.getTour = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
 
   const tour = await Tour.findOne({ slug })
@@ -35,3 +35,9 @@ exports.getTour = catchAsync(async (req, res) => {
     tour,
   });
 });
+
+exports.getLoginForm = (req, res) => {
+  res.status(200).render("login", {
+    title: "Log into your account",
+  });
+};

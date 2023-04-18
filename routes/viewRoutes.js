@@ -14,5 +14,7 @@ router.route("/").get(viewController.getOverview);
 // When a GET request is made to the "/tour" path, call the getTour function from the viewController module
 router.route("/tour/:slug").get(viewController.getTour);
 
+router.route("/login").get(viewController.getLoginForm);
+
 // Export the router object
 module.exports = router;

@@ -8,6 +8,7 @@ const helmet = require("helmet");
 var xss = require("xss-clean");
 const mongoSanitize = require("express-mongo-sanitize");
 var hpp = require("hpp");
+const cookieParser = require("cookie-parser");
 
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
@@ -32,6 +33,8 @@ app.use(helmet());
 
 // Parse JSON request body and limit its size to 10KB
 app.use(express.json({ limit: "10kb" }));
+// The cookieParser() middleware is being used to parse cookies from incoming requests.
+app.use(cookieParser());
 
 // Limit requests from the same API to prevent abuse
 const apiLimiter = rateLimit({
@@ -66,6 +69,11 @@ app.use(morgan("dev"));
 
 // Enable Cross-Origin Resource Sharing (CORS) for all routes
 app.use(cors());
+
+app.use((req, res, next) => {
+  console.log(req.cookies);
+  next();
+});
 
 // API routes
 app.use("/", viewRouter);
