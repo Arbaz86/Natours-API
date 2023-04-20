@@ -47,10 +47,24 @@ const $70af9284e599e604$export$596d806903d1f59e = async (email, password)=>{
         (0, $c67cb762f0198593$export$de026b00723010c1)("error", error.message);
     }
 };
+const $70af9284e599e604$export$a0973bcfe11b05c9 = async ()=>{
+    try {
+        const res = await fetch("http://localhost:8080/api/v1/users/logout");
+        const data = await res.json();
+        console.log(data);
+        if (data.status === "success") {
+            (0, $c67cb762f0198593$export$de026b00723010c1)("success", "Logged Out Successfully!");
+            location.reload();
+        }
+    } catch (error) {
+        (0, $c67cb762f0198593$export$de026b00723010c1)("error", "Error logging out! Try again.");
+    }
+};
 
 
 // Selecting the form element using its class name
 const $d0f7ce18c37ad6f6$var$form = document.querySelector(".form");
+const $d0f7ce18c37ad6f6$var$logOutBtn = document.querySelector(".nav__el--logout");
 if ($d0f7ce18c37ad6f6$var$form) // Adding an event listener to the form for the submit event
 $d0f7ce18c37ad6f6$var$form.addEventListener("submit", (e)=>{
     // Preventing the default form submission behavior
@@ -61,6 +75,7 @@ $d0f7ce18c37ad6f6$var$form.addEventListener("submit", (e)=>{
     // Calling the login function with email and password values
     (0, $70af9284e599e604$export$596d806903d1f59e)(email, password);
 });
+if ($d0f7ce18c37ad6f6$var$logOutBtn) $d0f7ce18c37ad6f6$var$logOutBtn.addEventListener("click", (0, $70af9284e599e604$export$a0973bcfe11b05c9));
 
 
 //# sourceMappingURL=bundle.js.map

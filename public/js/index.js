@@ -1,7 +1,8 @@
-import { login } from "./login";
+import { login, logout } from "./login";
 
 // Selecting the form element using its class name
 const form = document.querySelector(".form");
+const logOutBtn = document.querySelector(".nav__el--logout");
 
 if (form) {
   // Adding an event listener to the form for the submit event
@@ -17,3 +18,5 @@ if (form) {
     login(email, password);
   });
 }
+
+if (logOutBtn) logOutBtn.addEventListener("click", logout);
