@@ -1,8 +1,7 @@
-// Selecting the form element using its class name
-const form = document.querySelector(".form");
+import { showAlert } from "./alert";
 
 // Defining a function to handle login
-const login = async (email, password) => {
+export const login = async (email, password) => {
   // Logging the email and password to the console
   console.log({ email, password });
 
@@ -27,30 +26,17 @@ const login = async (email, password) => {
 
     // Showing an alert message if the login was successful and redirecting to the home page
     if (data.status === "success") {
-      alert("Logged in Successfully!");
+      showAlert("success", "Logged in Successfully!");
 
       setTimeout(() => {
         location.assign("/");
       }, 1500);
     } else {
       // Showing an alert message with the error message if the login failed
-      alert(data.message);
+      showAlert("error", data.message);
     }
   } catch (error) {
     // Showing an alert message with the error message if there was an error while sending the request
-    alert(error.message);
+    showAlert("error", error.message);
   }
 };
-
-// Adding an event listener to the form for the submit event
-form.addEventListener("submit", (e) => {
-  // Preventing the default form submission behavior
-  e.preventDefault();
-
-  // Getting the email and password values from the form inputs
-  let email = form.email.value;
-  let password = form.password.value;
-
-  // Calling the login function with email and password values
-  login(email, password);
-});
