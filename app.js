@@ -29,7 +29,15 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Set Security HTTP headers
-app.use(helmet());
+// set the Content Security Policy
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      connectSrc: ["'self'", "http://localhost:8080"],
+    },
+  })
+);
 
 // Parse JSON request body and limit its size to 10KB
 app.use(express.json({ limit: "10kb" }));
