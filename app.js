@@ -65,7 +65,10 @@ app.use(
 );
 
 // Log HTTP requests in the console in the "dev" format
-app.use(morgan("dev"));
+// Development logging
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // Enable Cross-Origin Resource Sharing (CORS) for all routes
 app.use(cors());

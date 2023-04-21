@@ -162,7 +162,6 @@ exports.isLoggedIn = async (req, res, next) => {
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
-      console.log("Hello");
 
       return next();
     } catch (err) {
@@ -170,7 +169,6 @@ exports.isLoggedIn = async (req, res, next) => {
       return next();
     }
   }
-  console.log("Hello3");
 
   next();
 };
