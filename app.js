@@ -41,6 +41,17 @@ app.use(
 
 // Parse JSON request body and limit its size to 10KB
 app.use(express.json({ limit: "10kb" }));
+
+// Configure the app to use URL-encoded request bodies
+app.use(
+  express.urlencoded({
+    // Allow the middleware to parse complex objects and arrays
+    extended: true,
+    // Set a limit of 10 kilobytes for the incoming request body
+    limit: "10kb",
+  })
+);
+
 // The cookieParser() middleware is being used to parse cookies from incoming requests.
 app.use(cookieParser());
 

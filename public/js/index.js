@@ -1,7 +1,7 @@
 import { login, logout } from "./login";
 
 // Selecting the form element using its class name
-const form = document.querySelector(".form");
+const form = document.querySelector(".form--login");
 const logOutBtn = document.querySelector(".nav__el--logout");
 
 if (form) {

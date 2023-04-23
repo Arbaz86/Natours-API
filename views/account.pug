@@ -19,24 +19,24 @@ block content
           +navItem('#', 'Billing', "credit-card")
 
         - if(user.role === "admin")
-            .admin-nav
-              h5.admin-nav__heading Admin
-              ul.side-nav
-                +navItem('#', 'Manage tours', "map")
-                +navItem('#', 'Manage users', "users")
-                +navItem('#', 'Manage reviews', "star")
-                +navItem('#', 'Manage bookings', "briefcase")
+          .admin-nav
+            h5.admin-nav__heading Admin
+            ul.side-nav
+              +navItem('#', 'Manage tours', "map")
+              +navItem('#', 'Manage users', "users")
+              +navItem('#', 'Manage reviews', "star")
+              +navItem('#', 'Manage bookings', "briefcase")
 
       .user-view__content
         .user-view__form-container
           h2.heading-secondary.ma-bt-md Your account settings
-          form.form.form-user-data
+          form.form.form-user-data(action='/submit-user-data' method="POST")
             .form__group
               label.form__label(for='name') Name
-              input#name.form__input(type='text', value=`${user.name}`, required)
+              input#name.form__input(type='text', value=`${user.name}`, required name='name')
             .form__group.ma-bt-md
               label.form__label(for='email') Email address
-              input#email.form__input(type='email', value=`${user.email}`, required)
+              input#email.form__input(type='email', value=`${user.email}`, required name='email')
             .form__group.form__photo-upload
               img.form__user-photo(src=`img/users/${user.photo}`, alt='User photo')
               a.btn-text(href='') Choose new photo

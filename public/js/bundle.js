@@ -64,7 +64,7 @@ const $70af9284e599e604$export$a0973bcfe11b05c9 = async ()=>{
 
 
 // Selecting the form element using its class name
-const $d0f7ce18c37ad6f6$var$form = document.querySelector(".form");
+const $d0f7ce18c37ad6f6$var$form = document.querySelector(".form--login");
 const $d0f7ce18c37ad6f6$var$logOutBtn = document.querySelector(".nav__el--logout");
 if ($d0f7ce18c37ad6f6$var$form) // Adding an event listener to the form for the submit event
 $d0f7ce18c37ad6f6$var$form.addEventListener("submit", (e)=>{
