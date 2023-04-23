@@ -47,7 +47,9 @@ export const login = async (email, password) => {
 
 export const logout = async () => {
   try {
-    const res = await fetch("http://localhost:8080/api/v1/users/logout");
+    const res = await fetch(
+      "https://natours-api-z82r.onrender.com/api/v1/users/logout"
+    );
     const data = await res.json();
 
     console.log(data);
