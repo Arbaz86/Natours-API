@@ -8,16 +8,22 @@ const viewController = require("../controllers/viewController");
 // Create an instance of the express router
 const router = express.Router();
 
-router.use(authController.isLoggedIn);
+// router.use(authController.isLoggedIn);
 
 // Define the routes using the router object
 // When a GET request is made to the root path ("/"), call the getOverview function from the viewController module
-router.route("/").get(viewController.getOverview);
+router.route("/").get(authController.isLoggedIn, viewController.getOverview);
 
 // When a GET request is made to the "/tour" path, call the getTour function from the viewController module
-router.route("/tour/:slug").get(viewController.getTour);
+router
+  .route("/tour/:slug")
+  .get(authController.isLoggedIn, viewController.getTour);
 
-router.route("/login").get(viewController.getLoginForm);
+router
+  .route("/login")
+  .get(authController.isLoggedIn, viewController.getLoginForm);
+
+router.route("/me").get(authController.protect, viewController.getAccount);
 
 // Export the router object
 module.exports = router;

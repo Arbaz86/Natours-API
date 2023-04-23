@@ -96,8 +96,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers?.authorization?.split(" ")[1];
   }
   // Otherwise, check for a cookie named "jwt" and use its value as the token
-  else if (req.cookie.jwt) {
-    token = req.cookie.jwt;
+  else if (req.cookies?.jwt) {
+    token = req.cookies?.jwt;
   }
 
   // If no JWT token was found, return an error indicating that the user is not logged in
@@ -136,7 +136,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 // Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
-  if (req.cookies.jwt) {
+  if (req.cookies?.jwt) {
     try {
       // 1) verify token
       const decoded = await promisify(jwt.verify)(
@@ -157,8 +157,6 @@ exports.isLoggedIn = async (req, res, next) => {
       // if (currentUser.changedPasswordAfter(decoded.iat)) {
       //   return next();
       // }
-
-      console.log(currentUser);
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;

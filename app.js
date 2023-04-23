@@ -34,7 +34,7 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      connectSrc: ["'self'", "https://natours-api-z82r.onrender.com"],
+      connectSrc: ["'self'", "http://localhost:8080"],
     },
   })
 );
@@ -43,6 +43,9 @@ app.use(
 app.use(express.json({ limit: "10kb" }));
 // The cookieParser() middleware is being used to parse cookies from incoming requests.
 app.use(cookieParser());
+
+// Enable Cross-Origin Resource Sharing (CORS) for all routes
+app.use(cors());
 
 // Limit requests from the same API to prevent abuse
 const apiLimiter = rateLimit({
@@ -77,9 +80,6 @@ app.use(
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-
-// Enable Cross-Origin Resource Sharing (CORS) for all routes
-app.use(cors());
 
 // practice middleware
 // app.use((req, res, next) => {
