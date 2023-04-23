@@ -38,6 +38,7 @@ export const login = async (email, password) => {
   } catch (error) {
     // Showing an alert message with the error message if there was an error while sending the request
     showAlert("error", error.message);
+    console.log(error);
   }
 };
 

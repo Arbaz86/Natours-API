@@ -45,6 +45,7 @@ const $70af9284e599e604$export$596d806903d1f59e = async (email, password)=>{
     } catch (error) {
         // Showing an alert message with the error message if there was an error while sending the request
         (0, $c67cb762f0198593$export$de026b00723010c1)("error", error.message);
+        console.log(error);
     }
 };
 const $70af9284e599e604$export$a0973bcfe11b05c9 = async ()=>{
