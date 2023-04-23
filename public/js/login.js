@@ -7,16 +7,19 @@ export const login = async (email, password) => {
 
   try {
     // Sending a POST request to the login endpoint with email and password in the request body
-    const res = await fetch("http://localhost:8080/api/v1/users/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+    const res = await fetch(
+      "https://natours-api-z82r.onrender.com/api/v1/users/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
+    );
 
     // Parsing the response data
     let data = await res.json();

@@ -27,7 +27,7 @@ router.route("/me").get(authController.protect, viewController.getAccount);
 
 router
   .route("/submit-user-data")
-  .post(authController.protect, viewController.updateUserData);
+  .patch(authController.protect, viewController.updateUserData);
 
 // Export the router object
 module.exports = router;
