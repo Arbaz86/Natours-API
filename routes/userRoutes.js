@@ -18,10 +18,13 @@ router.use(authController.protect);
 
 router.patch("/updateMyPassword", authController.updatePassword);
 router.get("/me", userController.getMe, userController.getUser);
+
+// Define a router for updating user data, including photo uploads
 router.patch(
   "/updateMe",
-  userController.uploadUserPhoto,
-  userController.updateMe
+  userController.uploadUserPhoto, // Middleware function for handling photo uploads
+  userController.resizeUserPhoto, // Middleware function for resizing and saving uploaded photos
+  userController.updateMe // Main handler function for updating user data
 );
 router.delete("/deleteMe", userController.deleteMe);
 

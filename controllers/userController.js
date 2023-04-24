@@ -1,23 +1,26 @@
 // Import required modules and functions
+const multer = require("multer");
+// Import the Sharp library for image processing
+const sharp = require("sharp");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const factory = require("./handlerFactory");
-// Import the `multer` package
-const multer = require("multer");
 
 // Set up the disk storage engine for uploaded files
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Specify the directory where the files will be saved
-    cb(null, "public/img/users");
-  },
-  filename: (req, file, cb) => {
-    // Generate a unique file name for the uploaded file
-    const ext = file.mimetype.split("/")[1];
-    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-  },
-});
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     // Specify the directory where the files will be saved
+//     cb(null, "public/img/users");
+//   },
+//   filename: (req, file, cb) => {
+//     // Generate a unique file name for the uploaded file
+//     const ext = file.mimetype.split("/")[1];
+//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//   },
+// });
+
+const multerStorage = multer.memoryStorage();
 
 // Set up a file filter function to ensure that only image files are uploaded
 const multerFilter = (req, file, cb) => {
@@ -35,6 +38,25 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 // Export a middleware function for handling user photo uploads
 exports.uploadUserPhoto = upload.single("photo");
+
+// Define a middleware function to resize user photos
+exports.resizeUserPhoto = (req, res, next) => {
+  // If there is no uploaded file, skip to the next middleware function
+  if (!req.file) return next();
+
+  // Rename the uploaded file to include the user ID and timestamp
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+  // Use Sharp to resize and convert the image to JPEG format, then save it to disk
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.filename}`);
+
+  // Call the next middleware function
+  next();
+};
 
 // Define a helper function to filter out unwanted fields when updating user data
 const filterObj = (obj, ...allowedFields) => {
