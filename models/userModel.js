@@ -21,7 +21,10 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, "Please provide a valid email"],
   },
   // User's profile photo
-  photo: { type: String },
+  photo: {
+    type: String,
+    default: "default.jpg",
+  },
   // User's role (user, guide, lead-guide, admin)
   role: {
     type: String,
@@ -117,6 +120,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
     return JWTTimestamp < changedTimestamp;
   }
 
+  // False means NOT changed
   return false;
 };
 
