@@ -76,34 +76,41 @@ const $70af9284e599e604$export$a0973bcfe11b05c9 = async () => {
 };
 
 const $936fcc27ffb6bbb1$export$f558026a994b6051 = async (data, type) => {
-  console.log({
-    data: data,
-    type: type,
-  });
   try {
-    const endpoint = type === "password" ? "updateMyPassword" : "updateMe";
+    const endpoint = type === "password" ? "updateMyPassword" : "updateMe"; // Creating a variable named "endpoint" based on the value of the "type" parameter
+    const headers =
+      type === "password"
+        ? {
+            "Content-Type": "application/json",
+          }
+        : {};
     const res = await fetch(
       `https://natours-api-z82r.onrender.com/api/v1/users/${endpoint}`,
       {
+        // Sending a PATCH request to the server to update the user's data
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers: headers,
+        body: type === "password" ? JSON.stringify(data) : data,
       }
     );
-    const resData = await res.json();
-    // Showing an alert message if the login was successful and redirecting to the home page
-    if (resData.status === "success")
+    const resData = await res.json(); // Parsing the response data as JSON and assigning it to a variable named "resData"
+    // Extracting status and message from resData using destructuring assignment
+    const { status: status, message: message } = resData;
+    // If the server response status is "success"
+    if (status === "success") {
       (0, $c67cb762f0198593$export$de026b00723010c1)(
         "success",
         `${type.toUpperCase()} Updated Successfully!`
-      );
-    // Showing an alert message with the error message if the login failed
-    else
-      (0, $c67cb762f0198593$export$de026b00723010c1)("error", resData.message);
+      ); // Show a success message to the user
+      // Reload the page after successful update
+      setTimeout(() => {
+        location.reload(); // Reload the page after a delay of 1000 milliseconds (1 second)
+      }, 1000);
+    } // If the server response status is not "success"
+    else (0, $c67cb762f0198593$export$de026b00723010c1)("error", message); // Show an error message to the user
   } catch (error) {
-    (0, $c67cb762f0198593$export$de026b00723010c1)("error", error.message);
+    // If there is an error in the try block
+    (0, $c67cb762f0198593$export$de026b00723010c1)("error", error.message); // Show an error message to the user
   }
 };
 
@@ -133,19 +140,15 @@ if ($d0f7ce18c37ad6f6$var$logOutBtn)
     (0, $70af9284e599e604$export$a0973bcfe11b05c9)
   );
 if ($d0f7ce18c37ad6f6$var$userDataForm)
-  $d0f7ce18c37ad6f6$var$userDataForm.addEventListener("submit", async (e) => {
+  $d0f7ce18c37ad6f6$var$userDataForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    // Getting the name and email values from the form inputs
-    let name = $d0f7ce18c37ad6f6$var$userDataForm.name.value;
-    let email = $d0f7ce18c37ad6f6$var$userDataForm.email.value;
+    // Getting the name, email and photo values from the form inputs
+    const formData = new FormData();
+    formData.append("name", $d0f7ce18c37ad6f6$var$userDataForm.name.value);
+    formData.append("email", $d0f7ce18c37ad6f6$var$userDataForm.email.value);
+    formData.append("photo", $d0f7ce18c37ad6f6$var$userDataForm.photo.files[0]);
     // Calling the updateData function with name and email values
-    await (0, $936fcc27ffb6bbb1$export$f558026a994b6051)(
-      {
-        name: name,
-        email: email,
-      },
-      "data"
-    );
+    (0, $936fcc27ffb6bbb1$export$f558026a994b6051)(formData, "data");
   });
 if ($d0f7ce18c37ad6f6$var$userPasswordForm)
   $d0f7ce18c37ad6f6$var$userPasswordForm.addEventListener(

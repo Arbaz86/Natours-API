@@ -25,15 +25,17 @@ if (loginForm) {
 if (logOutBtn) logOutBtn.addEventListener("click", logout);
 
 if (userDataForm) {
-  userDataForm.addEventListener("submit", async (e) => {
+  userDataForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Getting the name and email values from the form inputs
-    let name = userDataForm.name.value;
-    let email = userDataForm.email.value;
+    // Getting the name, email and photo values from the form inputs
+    const formData = new FormData();
+    formData.append("name", userDataForm.name.value);
+    formData.append("email", userDataForm.email.value);
+    formData.append("photo", userDataForm.photo.files[0]);
 
     // Calling the updateData function with name and email values
-    await updateSettings({ name, email }, "data");
+    updateSettings(formData, "data");
   });
 }
 if (userPasswordForm) {

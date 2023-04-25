@@ -1,31 +1,42 @@
-import { showAlert } from "./alert";
+import { showAlert } from "./alert"; // Importing a function named "showAlert" from a local file named "alert"
 
+// Defining a function named "updateSettings" that takes two parameters: "data" and "type"
 export const updateSettings = async (data, type) => {
-  console.log({ data, type });
   try {
-    const endpoint = type === "password" ? "updateMyPassword" : "updateMe";
+    const endpoint = type === "password" ? "updateMyPassword" : "updateMe"; // Creating a variable named "endpoint" based on the value of the "type" parameter
+
+    const headers = // Creating a variable named "headers" based on the value of the "type" parameter
+      type === "password" ? { "Content-Type": "application/json" } : {};
 
     const res = await fetch(
       `https://natours-api-z82r.onrender.com/api/v1/users/${endpoint}`,
       {
+        // Sending a PATCH request to the server to update the user's data
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers,
+        body: type === "password" ? JSON.stringify(data) : data,
       }
     );
 
-    const resData = await res.json();
+    const resData = await res.json(); // Parsing the response data as JSON and assigning it to a variable named "resData"
 
-    // Showing an alert message if the login was successful and redirecting to the home page
-    if (resData.status === "success") {
-      showAlert("success", `${type.toUpperCase()} Updated Successfully!`);
+    // Extracting status and message from resData using destructuring assignment
+    const { status, message } = resData;
+
+    // If the server response status is "success"
+    if (status === "success") {
+      showAlert("success", `${type.toUpperCase()} Updated Successfully!`); // Show a success message to the user
+
+      // Reload the page after successful update
+      setTimeout(() => {
+        location.reload(); // Reload the page after a delay of 1000 milliseconds (1 second)
+      }, 1000);
     } else {
-      // Showing an alert message with the error message if the login failed
-      showAlert("error", resData.message);
+      // If the server response status is not "success"
+      showAlert("error", message); // Show an error message to the user
     }
   } catch (error) {
-    showAlert("error", error.message);
+    // If there is an error in the try block
+    showAlert("error", error.message); // Show an error message to the user
   }
 };
