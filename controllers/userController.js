@@ -40,7 +40,7 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 exports.uploadUserPhoto = upload.single("photo");
 
 // Define a middleware function to resize user photos
-exports.resizeUserPhoto = (req, res, next) => {
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   // If there is no uploaded file, skip to the next middleware function
   if (!req.file) return next();
 
@@ -48,7 +48,7 @@ exports.resizeUserPhoto = (req, res, next) => {
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
   // Use Sharp to resize and convert the image to JPEG format, then save it to disk
-  sharp(req.file.buffer)
+  await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
@@ -56,7 +56,7 @@ exports.resizeUserPhoto = (req, res, next) => {
 
   // Call the next middleware function
   next();
-};
+});
 
 // Define a helper function to filter out unwanted fields when updating user data
 const filterObj = (obj, ...allowedFields) => {
