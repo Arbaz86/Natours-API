@@ -34,7 +34,7 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      connectSrc: ["'self'", "https://natours-api-z82r.onrender.com"],
+      connectSrc: ["'self'", "http://localhost:8080"],
     },
   })
 );

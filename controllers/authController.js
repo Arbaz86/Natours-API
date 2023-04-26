@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
-const sendEmail = require("../utils/sendEmail");
+const Email = require("../utils/sendEmail");
 const { promisify } = require("util");
 
 // Function to create JWT token
@@ -48,6 +48,10 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   // Create a new user
   const newUser = await User.create({ name, email, password, passwordConfirm });
+
+  const url = `${req.protocol}://${req.get("host")}/me`;
+  console.log(url);
+  await new Email(newUser, url).sendWelcome();
 
   // Signup the user and, send JWT
   createSendToken(newUser, 201, res);
@@ -197,24 +201,17 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 
   // 2) Generate the random reset token
-  const resetToken = user.createPasswordResetToken();
+  const resetToken = user.createPasswordRestToken();
   await user.save({ validateBeforeSave: false });
 
   // 3) Sent it to user's email
-  const resetURL = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/users/resetPassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: 
-${resetURL}.\nif you didn't forget your password, please ignore this email `;
-
   try {
-    // Send the email with the reset URL to the user's email address
-    await sendEmail({
-      email: user.email,
-      subject: "Your password reset token (valid for 10 min)",
-      message,
-    });
+    const resetURL = `${req.protocol}://${req.get(
+      "host"
+    )}/api/v1/users/resetPassword/${resetToken}`;
+
+    // Send the email to the user's email address with the reset URL
+    await new Email(user, resetURL).sendPasswordReset();
 
     // Return a success response
     res.status(200).json({

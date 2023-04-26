@@ -19,19 +19,16 @@ const $70af9284e599e604$export$596d806903d1f59e = async (email, password) => {
   });
   try {
     // Sending a POST request to the login endpoint with email and password in the request body
-    const res = await fetch(
-      "https://natours-api-z82r.onrender.com/api/v1/users/login",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      }
-    );
+    const res = await fetch("http://localhost:8080/api/v1/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
     // Parsing the response data
     let data = await res.json();
     // Logging the response data to the console
@@ -55,9 +52,7 @@ const $70af9284e599e604$export$596d806903d1f59e = async (email, password) => {
 };
 const $70af9284e599e604$export$a0973bcfe11b05c9 = async () => {
   try {
-    const res = await fetch(
-      "https://natours-api-z82r.onrender.com/api/v1/users/logout"
-    );
+    const res = await fetch("http://localhost:8080/api/v1/users/logout");
     const data = await res.json();
     console.log(data);
     if (data.status === "success") {
@@ -84,15 +79,12 @@ const $936fcc27ffb6bbb1$export$f558026a994b6051 = async (data, type) => {
             "Content-Type": "application/json",
           }
         : {};
-    const res = await fetch(
-      `https://natours-api-z82r.onrender.com/api/v1/users/${endpoint}`,
-      {
-        // Sending a PATCH request to the server to update the user's data
-        method: "PATCH",
-        headers: headers,
-        body: type === "password" ? JSON.stringify(data) : data,
-      }
-    );
+    const res = await fetch(`http://localhost:8080/api/v1/users/${endpoint}`, {
+      // Sending a PATCH request to the server to update the user's data
+      method: "PATCH",
+      headers: headers,
+      body: type === "password" ? JSON.stringify(data) : data,
+    });
     const resData = await res.json(); // Parsing the response data as JSON and assigning it to a variable named "resData"
     // Extracting status and message from resData using destructuring assignment
     const { status: status, message: message } = resData;

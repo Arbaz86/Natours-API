@@ -1,30 +1,71 @@
-// Require nodemailer library
 const nodemailer = require("nodemailer");
+const pug = require("pug");
+const htmlToText = require("html-to-text");
 
-// Define async function to send email
-const sendEmail = async (options) => {
-  // 1) Create a transporter
-  const transporter = nodemailer.createTransport({
-    // Use environment variables to store email settings
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
+// Export Email class as a module
+module.exports = class Email {
+  // Constructor function that initializes Email object
+  constructor(user, url) {
+    this.to = user.email; // Recipient email
+    this.firstName = user.name.split(" ")[0]; // First name of recipient
+    this.url = url; // URL to include in email
+    this.from = `Arbaz Hussain <${process.env.EMAIL_FROM}>`; // Sender email address and name
+  }
 
-  // 2) Define the email options
-  const mailOptions = {
-    from: "Arbaz Hussain <arbazh777@gmail.com>", // Sender email address and name
-    to: options.email, // Recipient email address
-    subject: options.subject, // Email subject
-    text: options.message, // Email message
-  };
+  // Function that creates a new email transport
+  newTransport() {
+    // If running in production environment, use SendGrid to send emails
+    if (process.env.NODE_ENV === "production") {
+      // SendGrid implementation here
+      return 1;
+    }
 
-  // 3) Actually send the email
-  await transporter.sendMail(mailOptions);
+    return nodemailer.createTransport({
+      // Use environment variables to store email settings
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USERNAME,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+  }
+
+  // Send the actual email here
+  async send(template, subject) {
+    // 1) Render HTML based on a pug template
+    const html = pug.renderFile(
+      `${__dirname}/../views/emails/${template}.pug`,
+      {
+        firstName: this.firstName,
+        url: this.url,
+        subject,
+      }
+    );
+
+    // 2) Define email options
+    const mailOptions = {
+      from: this.from, // Sender email address and name
+      to: this.to, // Recipient email address
+      subject, // Email subject
+      html, // HTML version of the email
+      text: htmlToText.convert(html), // Plain text version of the email
+    };
+
+    // 3) Create a transport and send email
+    await this.newTransport().sendMail(mailOptions);
+  }
+
+  // Method to send a welcome email
+  async sendWelcome() {
+    await this.send("Welcome", "Welcome to the Natours Family!");
+  }
+
+  // Method to send a password reset email
+  async sendPasswordReset() {
+    await this.send(
+      "passwordReset",
+      "Your password reset token (valid for only 10 minutes)"
+    );
+  }
 };
-
-// Export the sendEmail function
-module.exports = sendEmail;

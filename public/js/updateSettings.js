@@ -8,15 +8,12 @@ export const updateSettings = async (data, type) => {
     const headers = // Creating a variable named "headers" based on the value of the "type" parameter
       type === "password" ? { "Content-Type": "application/json" } : {};
 
-    const res = await fetch(
-      `https://natours-api-z82r.onrender.com/api/v1/users/${endpoint}`,
-      {
-        // Sending a PATCH request to the server to update the user's data
-        method: "PATCH",
-        headers,
-        body: type === "password" ? JSON.stringify(data) : data,
-      }
-    );
+    const res = await fetch(`http://localhost:8080/api/v1/users/${endpoint}`, {
+      // Sending a PATCH request to the server to update the user's data
+      method: "PATCH",
+      headers,
+      body: type === "password" ? JSON.stringify(data) : data,
+    });
 
     const resData = await res.json(); // Parsing the response data as JSON and assigning it to a variable named "resData"
 
