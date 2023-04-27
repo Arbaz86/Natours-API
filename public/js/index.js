@@ -1,9 +1,11 @@
 import { login, logout } from "./login";
 import { updateSettings } from "./updateSettings";
+import { signup } from "./signup";
 
 // Selecting the form element using its class name
 const loginForm = document.querySelector(".form--login");
 const logOutBtn = document.querySelector(".nav__el--logout");
+const signupBtn = document.querySelector(".form--signup");
 const userDataForm = document.querySelector(".form-user-data");
 const userPasswordForm = document.querySelector(".form-user-password");
 
@@ -23,6 +25,22 @@ if (loginForm) {
 }
 
 if (logOutBtn) logOutBtn.addEventListener("click", logout);
+
+if (signupBtn) {
+  signupBtn.addEventListener("submit", (e) => {
+    // Preventing the default form submission behavior
+    e.preventDefault();
+
+    // Getting the name, email, password and passwordConfirm values from the form inputs
+    let name = signupBtn.name.value;
+    let email = signupBtn.email.value;
+    let password = signupBtn.password.value;
+    let passwordConfirm = signupBtn.passwordConfirm.value;
+
+    // Calling the signup function with name, email, password and passwordConfirm values
+    signup({ name, email, password, passwordConfirm });
+  });
+}
 
 if (userDataForm) {
   userDataForm.addEventListener("submit", (e) => {

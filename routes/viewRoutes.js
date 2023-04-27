@@ -23,6 +23,10 @@ router
   .route("/login")
   .get(authController.isLoggedIn, viewController.getLoginForm);
 
+router
+  .route("/signup")
+  .get(authController.isLoggedIn, viewController.getSignupForm);
+
 router.route("/me").get(authController.protect, viewController.getAccount);
 
 router
