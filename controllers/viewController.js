@@ -51,12 +51,6 @@ exports.getSignupForm = (req, res) => {
   });
 };
 
-exports.getAccount = (req, res) => {
-  res.status(200).render("account", {
-    title: "Your Account",
-  });
-};
-
 exports.updateUserData = catchAsync(async (req, res, next) => {
   const { name, email } = req.body;
 
