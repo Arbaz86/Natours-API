@@ -118,7 +118,7 @@ const $2db3670f13ba185b$export$7200a869094fec36 = async ({ name: name , email: e
         });
         const data = await res.json();
         if (data.status === "success") {
-            (0, $c67cb762f0198593$export$de026b00723010c1)("success", "Sign In Successfully!");
+            (0, $c67cb762f0198593$export$de026b00723010c1)("success", "Signup Successfully!");
             setTimeout(()=>{
                 location.assign("/");
             }, 500);
