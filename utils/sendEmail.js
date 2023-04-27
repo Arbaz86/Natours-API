@@ -64,7 +64,7 @@ module.exports = class Email {
 
   // Method to send a welcome email
   async sendWelcome() {
-    await this.send("Welcome", "Welcome to the Natours Family!");
+    await this.send("welcome", "Welcome to the Natours Family!");
   }
 
   // Method to send a password reset email

@@ -50,7 +50,6 @@ exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({ name, email, password, passwordConfirm });
 
   const url = `${req.protocol}://${req.get("host")}/me`;
-  console.log(url);
   await new Email(newUser, url).sendWelcome();
 
   // Signup the user and, send JWT
