@@ -9,6 +9,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const { tourId } = req.params;
 
   const tour = await Tour.findById(tourId);
+  console.log(tour.price);
 
   // 2) Create checkout session
   const session = await stripe.checkout.sessions.create({
@@ -27,7 +28,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
             description: tour.summary,
             images: [`https://www.natours.dev/img/tours/${tour.imageCover}`],
           },
-          unit_amount: tour.price * 80,
+          unit_amount: tour.price * 80 * 100,
         },
         quantity: 1,
       },

@@ -4,6 +4,8 @@ extends base
 include _reviewCard
 
 block append head
+  script(src='https://js.stripe.com/v3/')
+
 
 mixin overviewBox(label, text, icon)
   //- Create a div to hold the label, text, and icon
@@ -44,16 +46,16 @@ block content
 
           //- Create a variable 'date' and set it to the first start date of the tour.
           //- Format the date with month name and year in English locale.
-          - const date = tour.startDates[0].toLocaleString("en-us", {month : "long", year : "numeric"})
+          - const date = tour.startDates[0].toLocaleString('en-us', {month : 'long', year : 'numeric'})
           //- Each box contains an text, label, and icon.
-          +overviewBox("Next date", date, "calendar")
-          //- The "calender" icon will be used for the "Next date" box.
-          +overviewBox("Difficulty", tour.difficulty, "trending-up")
-          //- Use the "trending-up" icon for the "Difficulty" box.
-          +overviewBox("Participants", `${tour.maxGroupSize} people`, "user")
-          //- Use the "user" icon for the "Participants" box.
-          +overviewBox("Rating", `${tour.ratingsAverage} / 5`, "star")
-          //- Use the "star" icon for the "Rating" box.
+          +overviewBox('Next date', date, 'calendar')
+          //- The 'calender' icon will be used for the 'Next date' box.
+          +overviewBox('Difficulty', tour.difficulty, 'trending-up')
+          //- Use the 'trending-up' icon for the 'Difficulty' box.
+          +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
+          //- Use the 'user' icon for the 'Participants' box.
+          +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
+          //- Use the 'star' icon for the 'Rating' box.
 
 
         .overview-box__group
@@ -70,7 +72,7 @@ block content
 
     .description-box
       h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
-      - const paragraphs = tour.description.split("\n");
+      - const paragraphs = tour.description.split('\n');
       each p in paragraphs
         p.description__text= p
 
@@ -102,4 +104,4 @@ block content
         if user
           button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
         else
-          a.btn.btn--green.span-all-rows(href="/login") Login to book tour
+          a.btn.btn--green.span-all-rows(href='/login') Login to book tour

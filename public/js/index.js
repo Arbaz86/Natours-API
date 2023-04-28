@@ -1,6 +1,7 @@
 import { login, logout } from "./login";
 import { updateSettings } from "./updateSettings";
 import { signup } from "./signup";
+import { bookTour } from "./stripe";
 
 // Selecting the form element using its class name
 const loginForm = document.querySelector(".form--login");
@@ -8,6 +9,7 @@ const logOutBtn = document.querySelector(".nav__el--logout");
 const signupBtn = document.querySelector(".form--signup");
 const userDataForm = document.querySelector(".form-user-data");
 const userPasswordForm = document.querySelector(".form-user-password");
+const bookBtn = document.getElementById("book-tour");
 
 if (loginForm) {
   // Adding an event listener to the form for the submit event
@@ -77,5 +79,15 @@ if (userPasswordForm) {
     passwordCurrent = userPasswordForm["password-current"].value = "";
     password = userPasswordForm["password"].value = "";
     passwordConfirm = userPasswordForm["password-confirm"].value = "";
+  });
+}
+
+if (bookBtn) {
+  bookBtn.addEventListener("click", (e) => {
+    e.target.textContent = "Processing...";
+    const { tourId } = e.target.dataset;
+    console.log(tourId);
+
+    bookTour(tourId);
   });
 }
