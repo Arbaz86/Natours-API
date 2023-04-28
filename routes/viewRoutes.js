@@ -1,6 +1,7 @@
 // Require the express module
 const express = require("express");
 const authController = require("../controllers/authController");
+const bookingController = require("../controllers/bookingController");
 
 // Require the view controller module
 const viewController = require("../controllers/viewController");
@@ -12,7 +13,13 @@ const router = express.Router();
 
 // Define the routes using the router object
 // When a GET request is made to the root path ("/"), call the getOverview function from the viewController module
-router.route("/").get(authController.isLoggedIn, viewController.getOverview);
+router
+  .route("/")
+  .get(
+    bookingController.createBookingCheckout,
+    authController.isLoggedIn,
+    viewController.getOverview
+  );
 
 // When a GET request is made to the "/tour" path, call the getTour function from the viewController module
 router

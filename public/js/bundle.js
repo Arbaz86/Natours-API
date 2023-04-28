@@ -104,7 +104,7 @@ const $2db3670f13ba185b$export$7200a869094fec36 = async ({ name: name , email: e
         passwordConfirm: passwordConfirm
     });
     try {
-        const res = await fetch("http://localhost:8080/api/v1/users/signup", {
+        const res = await fetch("https://natours-api-z82r.onrender.com/api/v1/users/signup", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -137,7 +137,7 @@ const $6710bca62beba915$export$8d5bdbf26681c0c2 = async (tourId)=>{
         const session = await res.json();
         const url = session?.session?.url;
         if (session?.session?.url) window.location.href = url;
-        else (0, $c67cb762f0198593$export$de026b00723010c1)(session);
+        else (0, $c67cb762f0198593$export$de026b00723010c1)("error", "Something went wrong!");
     } catch (error) {
         console.log(error.message);
         (0, $c67cb762f0198593$export$de026b00723010c1)("error", error.message);
