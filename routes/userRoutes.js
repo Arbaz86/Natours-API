@@ -1,23 +1,28 @@
+// Import the Express.js module
 const express = require("express");
 
+// Import userController and authController modules
 const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
 
+// Create an instance of an Express Router
 const router = express.Router();
 
-// User authentication routes
-router.post("/signup", authController.signup);
-router.post("/login", authController.login);
-router.get("/logout", authController.logout);
+// Define user authentication routes using the authController methods
+router.post("/signup", authController.signup); // User signup route
+router.post("/login", authController.login); // User login route
+router.get("/logout", authController.logout); // User logout route
 
-router.post("/forgotPassword", authController.forgotPassword);
-router.patch("/resetPassword/:token", authController.resetPassword);
+// Define password reset routes
+router.post("/forgotPassword", authController.forgotPassword); // Route for sending reset password email
+router.patch("/resetPassword/:token", authController.resetPassword); // Route for resetting password using token
 
-// It will protect all the below routes
+// Require authentication for all routes below this point
 router.use(authController.protect);
 
-router.patch("/updateMyPassword", authController.updatePassword);
-router.get("/me", userController.getMe, userController.getUser);
+// Define routes for updating user data, including photo uploads
+router.patch("/updateMyPassword", authController.updatePassword); // Route for updating user password
+router.get("/me", userController.getMe, userController.getUser); // Route for retrieving current user data
 
 // Define a router for updating user data, including photo uploads
 router.patch(
@@ -26,19 +31,21 @@ router.patch(
   userController.resizeUserPhoto, // Middleware function for resizing and saving uploaded photos
   userController.updateMe // Main handler function for updating user data
 );
-router.delete("/deleteMe", userController.deleteMe);
+router.delete("/deleteMe", userController.deleteMe); // Route for deleting user account
 
+// Require admin access for all routes below this point
 router.use(authController.restrictTo("admin"));
-// User management routes
+
+// Define routes for user management
 router
   .route("/")
   .get(userController.getAllUsers)
-  .post(userController.createUser);
+  .post(userController.createUser); // Route for retrieving all users and creating new users
 router
   .route("/:id")
   .get(userController.getUser)
   .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .delete(userController.deleteUser); // Route for retrieving, updating and deleting user data by ID
 
-// Export the router
+// Export the router for use in other modules
 module.exports = router;

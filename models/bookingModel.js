@@ -33,11 +33,13 @@ const bookingSchema = new mongoose.Schema({
 });
 
 // Pre-query middleware to populate the user and tour fields
-bookingSchema.pre(/^find/, function () {
+bookingSchema.pre(/^find/, function (next) {
   this.populate("user").populate({
     path: "tour",
     select: "name",
   });
+
+  next();
 });
 
 // Creating the Booking model using the booking schema
