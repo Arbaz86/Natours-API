@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">An awesome tour booking site built on top of <a href="https://nodejs.org/en/" target="_blank">NodeJS</a>.</h4>
+<h4 align="center"> Natours is an awesome tour booking site built on top of <a href="https://nodejs.org/en/" target="_blank">NodeJS</a>. The site offers a variety of features that allow users to search and book tours, manage their bookings, and update their profile. Authentication and authorization features are also included, allowing users to log in and log out. The tour page allows users to check out tours on a map and see user reviews and ratings. Users can pay for tours using a credit card.</h4>
 
  <p align="center">
  <a href="#deployed-version">Demo</a> •
