@@ -28,7 +28,7 @@ Live demo (Feel free to visit) 👉 : https://natours-api-z82r.onrender.com/
 ## Key Features
 
 * Authentication and Authorization
-  - Login and logout
+  - Login, Signup and logout
 * Tour
   - Manage booking, check tours map, check users' reviews and rating
 * User profile
